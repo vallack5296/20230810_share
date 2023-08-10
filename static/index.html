@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>環境とリソースの選択</title>
+    <!-- jQueryというJavaScriptライブラリを読み込むために使用。JavaScriptコードをより簡潔かつ効果的に記述するためのツールセットを提供 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>環境とリソースを選択してください</h1>
+    <form id="selection-form">
+        <label for="environment">対象環境：</label>
+        <select id="environment" name="environment">
+            <option value="development">開発環境</option>
+            <option value="production">本番環境</option>
+        </select>
+        <br><br>
+        <label for="resource">対象リソース：</label>
+        <select id="resource" name="resource">
+            <option value="ec2">EC2</option>
+            <option value="rds">RDS</option>
+        </select>
+        <br><br>
+        <label for="tag_name">タグ名：</label>
+        <input type="text" id="tag_name" name="tag_name">
+        <br><br>
+        <label for="tag_value">タグ値：</label>
+        <input type="text" id="tag_value" name="tag_value">
+        <br><br>
+        <input type="submit" value="選択">
+    </form>
+    <script>
+        // ページが読み込まれたときに実行される処理
+        $(document).ready(function() {
+            // submit関数はフォーム送信時に実行される
+            $('#selection-form').submit(function(event) {
+                event.preventDefault();
+                
+                // 選択された環境、リソース、タグ名、タグ値を取得
+                // $('#environment')：environmentというIDを持つHTML要素を選択
+                // .val()：選択した要素の値を取得するjQueryメソッド。テキストボックスの入力値や、選択ボックスの選択された項目の値を取得。
+                var environment = $('#environment').val();
+                var resource = $('#resource').val();
+                var tagName = $('#tag_name').val();
+                var tagValue = $('#tag_value').val();
+                
+                // クエリパラメータをオブジェクトとして定義
+                var queryParams = {
+                    environment: environment,
+                    resource: resource,
+                    tagName: tagName,
+                    tagValue: tagValue
+                };
+                
+                // AWS API GatewayのエンドポイントURLを設定
+                var apiGatewayUrl = 'https://widblqzol0.execute-api.ap-northeast-1.amazonaws.com/dev';
+                
+                // jQueryライブラリに含まれているAJAX関数である$.get() を使用。指定したURLにGETリクエストを送信
+                $.get(apiGatewayUrl, queryParams, function(data) {
+                    // レスポンスを処理するコードをここに追加
+                    console.log(data);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
